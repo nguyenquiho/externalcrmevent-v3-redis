@@ -189,7 +189,7 @@ public class WFManagerEventListener extends AbstractWFManagerEventListener imple
     public void onManagerEvent(ManagerEvent event) {
         Runnable task = () -> {
             String eventName = event.getClass().getSimpleName();
-            System.out.println("HAHAHAHAAAAAAAAAAA");
+//            System.out.println("TIG " + eventName);
 
             if (filterEvent(eventName)) {
                 long receivedTimestamp0 = System.currentTimeMillis() / 1000;
@@ -600,6 +600,16 @@ public class WFManagerEventListener extends AbstractWFManagerEventListener imple
                                     if ("inbound".equals(site.get("direction"))) {
                                         c.addParam("callernumber", ev.getCallerId1());
                                         c.addParam("destinationnumber", ev.getCallerId2());
+                                        
+                                        String channlel2 = ev.getChannel2();
+                                        String[] chandest = channlel2.split("-");
+                                        if (Pattern.matches("^SIP/" + site.get("customer_code") + "([0-9]+)$", chandest[0])) {
+                                            String ext = chandest[0].replace("SIP/" + site.get("customer_code"), "");
+                                            c.addParam("extension", ext); 
+                                        } else if (Pattern.matches("^Local/([0-9]+)@" + site.get("customer_code") + "$", chandest[0])) {
+                                            String ext = chandest[0].replaceAll("^Local/([0-9]+)@" + site.get("customer_code") + "$", "$1");
+                                            c.addParam("extension", ext);
+                                        }
                                     } else {
                                         String ext = "";
                                         String channlel1 = ev.getChannel1();
@@ -612,6 +622,7 @@ public class WFManagerEventListener extends AbstractWFManagerEventListener imple
                                         }
                                         c.addParam("callernumber", ev.getCallerId2());
                                         c.addParam("destinationnumber", ext);
+                                        c.addParam("extension", ext);
                                     }
                                 } catch (Exception ex) {
                                     System.out.println(ex.getMessage());
@@ -715,12 +726,12 @@ public class WFManagerEventListener extends AbstractWFManagerEventListener imple
                             param_name = params_to_4x.get("param_name");
                             param_email = params_to_4x.get("param_email");
                         }else{
-                            System.out.println("KKKKKKKKKKKKKKKKK");
+//                            System.out.println("KKKKKKKKKKKKKKKKK");
                         }
-                        System.out.println("VERSIONNNNNNNN " + version);
-                        System.out.println("UNIQUEIDDDDDDD " + ev.getUniqueId());
-                        System.out.println("param_name " + param_name);
-                        System.out.println("param_email " + param_email);
+//                        System.out.println("VERSIONNNNNNNN " + version);
+//                        System.out.println("UNIQUEIDDDDDDD " + ev.getUniqueId());
+//                        System.out.println("param_name " + param_name);
+//                        System.out.println("param_email " + param_email);
 
                         if ("1".equals(version)) {
                             Callback c = new Callback(url, this.queuehost, this.log2console);
@@ -795,7 +806,7 @@ public class WFManagerEventListener extends AbstractWFManagerEventListener imple
                         }
                         DBSelectionSet.getInstance().updateCall(ev.getUniqueId(), "HangUp", update_date, customer_code);
                     }else{
-                        System.out.println("HIHIIIIIIIIIIIIII");
+//                        System.out.println("HIHIIIIIIIIIIIIII");
                     }
                 }
             }

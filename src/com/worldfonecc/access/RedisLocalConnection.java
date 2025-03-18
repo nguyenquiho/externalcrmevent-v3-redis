@@ -26,7 +26,8 @@ public class RedisLocalConnection {
     private RedisLocalConnection() {
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(128);
-        jedisPool = new JedisPool(poolConfig, "127.0.0.1", 6799, 60000, "worldfone-cloud");
+//        jedisPool = new JedisPool(poolConfig, "127.0.0.1", 6798, 60000, "worldfone-cloud");
+        jedisPool = new JedisPool(poolConfig, "192.168.16.56", 6798, 60000, "worldfone-cloud"); // ho update len master 16.56
     }
 
     @Override
